@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cd \"C:\\\\Users\\\\38124\\\\Desktop\\\\Test\" && g++ Main.cpp -o Main.exe && ./Main.exe)",
+      "Bash(rm -f a.exe)",
+      "Bash(g++ Main.cpp)",
+      "Bash(./a.exe)",
+      "Read(//c/Users/38124/Desktop/The-C-20-Masterclass-Source-Code-main/**)",
+      "Read(//c/Users/38124/Desktop/**)"
+    ]
+  }
+}
