@@ -6,21 +6,17 @@
 #include <bitset>
 #include <array>
 #include <vector>
-
     constexpr unsigned short int Perm_Move {1<<0}; // 0x1
     constexpr unsigned short int Perm_Attact {1<<1};//0x2
     constexpr unsigned short int Perm_Use{1<<2}; // 0x4;
     constexpr unsigned short int Perm_Chat{1<<3}; // 0x8
     constexpr unsigned short int Perm_Admin{1<<4}; //0x10;
-    
-
-    
- struct PermissionInfo 
+        
+struct PermissionInfo 
     {
         unsigned int flag;
         std::string name;
     };
-
  class  Character 
     {
     private:
@@ -54,7 +50,6 @@
         }
         void GetStatue()
         {
-            std::cout<<std::setw(20)<<"当前权限:"<<std::bitset<sizeof(unsigned short int)*8>(Permission)<<std::endl;
             if (!Permission)
             {
                 std::cout<<std::setw(20)<<"当前权限全关"<<std::endl;
@@ -71,7 +66,6 @@
                       
             }
             std::cout<<std::setw(20)<<"当前权限:"<<std::bitset<sizeof(unsigned short int)*8>(Permission)<<std::endl;
-            
         }
     };
     
@@ -164,5 +158,9 @@ int main()
 
     Player_00.GetStatue();
 
+
+    
+
     return 0;
+    
 }
