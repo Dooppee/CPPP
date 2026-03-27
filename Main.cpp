@@ -6,13 +6,14 @@
 #include <bitset>
 #include <array>
 #include <vector>
+#include <memory>
     constexpr unsigned short int Perm_Move {1<<0}; // 0x1
     constexpr unsigned short int Perm_Attact {1<<1};//0x2
     constexpr unsigned short int Perm_Use{1<<2}; // 0x4;
     constexpr unsigned short int Perm_Chat{1<<3}; // 0x8
     constexpr unsigned short int Perm_Admin{1<<4}; //0x10;
-        
-struct PermissionInfo 
+    
+    struct PermissionInfo 
     {
         unsigned int flag;
         std::string name;
@@ -68,7 +69,113 @@ struct PermissionInfo
             std::cout<<std::setw(20)<<"当前权限:"<<std::bitset<sizeof(unsigned short int)*8>(Permission)<<std::endl;
         }
     };
+
+    unsigned short int GetNumber(unsigned short int Array[],int InRow,int Incol)
+    {
+        return Array[((InRow-1)*Incol)+(Incol-1)];
+    }
+
+class Canvas
+
+{
+private:
+    int row; //行数  元素行数表示 y 
+    int cols; //列数 元素列数表示 x
+    std::vector<char> Pixels;
+public:
+    Canvas(int Inrow,int incols):row(Inrow),cols(incols)
+    {
+        Pixels.resize(row*cols,'.');
+    };
+    //显示所有
+    void FillPixels()
+    {
+        for (size_t i{0}; i < row; ++i) // 行
+        {
+            for (size_t j{0}; j < cols; ++j) // 列
+            {
+                std::cout<<Pixels.at(i*cols+j)<<' ';
+            }
+            std::cout<<std::endl;
+        } 
+    }
+
+    //填充对应位置
+    void FillPixelDir(int y,int x,char Pixel)
+    {
+        if (y<row&&x<cols&&y>=0&&x>=0)
+        {
+            Pixels.at(y*x+x) = Pixel;
+        }
+    }
+
+    //填充行
+    void FillPixelRow(int Inrow,char Pixel)
+    {
+        if (Inrow>=0&&Inrow<row)
+        {
+            for (size_t i {0}; i < cols; i++)
+            {
+                Pixels.at(Inrow*cols+i) = Pixel;
+            }
+
+            FillPixels();
+        }
+        
+    }
+    //填充列
+
+    void FillPixelColsCols(int InCols,char Pixel)
+    {
+        if (InCols>=0&&InCols<cols)
+        {
+            for (size_t i {0}; i < row; i++)
+            {
+                Pixels.at(i*cols+InCols) = Pixel;
+            }
+
+            FillPixels();
+        }
+        
+    }
+};
+
+class Canvas3D
+
+{
+private:
+    int x;
+    int y;
+    int z;
+    std::vector<char> matrix3D;
     
+public:
+    Canvas3D(int Inz ,int Iny,int Inx):x(Inx),y(Iny),z(Inz) // 3,4,5 // 三页, 四行 ,
+    {
+        matrix3D.resize(z*y*x,'.');
+    };
+
+    //创建一个魔方的三个面
+    void FillPlan()
+    {
+        for (size_t i{0}; i < z; i++) // 页
+        {
+            for (size_t j{0}; j < y; j++) // 行
+            {
+                for (size_t k{0}; k < x; k++) // 列
+                {
+                    std::cout<< matrix3D.at(i*y*x+j*x+k);
+                }
+                std::cout<<'\n';
+            }
+            
+            std::cout<<'\n';
+        }
+        
+    }
+};
+
+
 int main()
 {
     // std::cout<<std::setfill('*');
@@ -159,8 +266,46 @@ int main()
     Player_00.GetStatue();
 
 
-    
+    //数组的大小编译编译时是固定的,无法动态改变除非使用动态数组
+    constexpr unsigned short int row{3},cols{4};
+    unsigned short int  Array [row*cols]{};
+    //填充数组
+    for (size_t i{0}; i < row*cols; ++i)
+    {
+        Array[i] = i+1;
+    }
 
-    return 0;
+    for (size_t j {0}; j < row; ++j)
+    {
+        
+        for (size_t k{0}; k <cols ; ++k)
+        {
+            std::cout<<Array[j*cols+k]<<',';
+        }
+       std::cout<<std::endl;
+    }    
     
+    std::cout << GetNumber(Array,1,2)<<std::endl;
+    std::cout << GetNumber(Array,3,4)<<std::endl;
+
+    
+    auto CanvasPtr {std::make_shared<Canvas>(1,9)};
+    //CanvasPtr->FillPixels();
+    // Canvas NewCanvas{3,5};
+    // NewCanvas.FillPixels();
+    // NewCanvas.FillPixelDir(0,0,'*');
+    // std::cout<<std::endl;
+    // NewCanvas.FillPixels();
+    // std::cout<<'\n';
+    // NewCanvas.FillPixelRow(1,'&');
+    // std::cout<<'\n';
+    // NewCanvas.FillPixelColsCols(2,'$');
+    //CanvasPtr->FillPixelRow(4,'0');
+    CanvasPtr->FillPixelColsCols(5,'$');
+
+    auto Canvas3DPtr{std::make_shared<Canvas3D>(3,4,5)};
+
+    Canvas3DPtr->FillPlan();
+    //Canvas3DPtr->FillPlan();
+    return 0;
 }
