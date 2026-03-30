@@ -7,6 +7,7 @@
 #include <array>
 #include <vector>
 #include <memory>
+#include <cstddef>
     constexpr unsigned short int Perm_Move {1<<0}; // 0x1
     constexpr unsigned short int Perm_Attact {1<<1};//0x2
     constexpr unsigned short int Perm_Use{1<<2}; // 0x4;
@@ -307,5 +308,21 @@ int main()
 
     Canvas3DPtr->FillPlan();
     //Canvas3DPtr->FillPlan();
+
+    //int* Pter = new(std::nothrow)int(2);
+    int* PtrA{nullptr};
+    int ArrayN[]{1,2,2,3,3};
+    PtrA = ArrayN;
+    int Number{10};
+    int* Ptr = &Number;
+    int* PtrArray{new int[5]{1,2,3,4,5}};
+    
+    for (size_t i = 0; i < 5; i++)
+    {
+        std::cout<<*(PtrA+i)<<std::endl;
+    }
+
+    //std::cout<<std::size(Ptr);   
+    
     return 0;
 }
