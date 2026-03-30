@@ -185,6 +185,16 @@ float GetCos(float*Vector1,float*Vector2)
     return Resul;
 }
 
+void Normalize(float*Vector)
+{
+
+    //(*Vector)/((std::sqrt(std::pow(*(Vector),2))+(std::pow(*(Vector+1),2))));
+    //(*Vector+1)/((std::sqrt(std::pow(*(Vector),2))+(std::pow(*(Vector+1),2))));
+    double NewVector[]{(*Vector)/((std::sqrt(std::pow(*(Vector),2)+(std::pow(*(Vector+1),2))))),
+    *(Vector+1)/((std::sqrt((*Vector)*(*Vector)+(*(Vector+1))*(*(Vector+1)))))};
+    std::cout<<NewVector[0]<<' '<<NewVector[1]<<std::endl;
+}
+
 int main()
 {
     // std::cout<<std::setfill('*');
@@ -334,8 +344,9 @@ int main()
     std::cout<<std::endl;
     float Vector1[]{1.f,0.f};
     float Vector2[]{3.f,4.f};
-    std::cout<< GetCos(Vector1,Vector2);
+    std::cout<< GetCos(Vector1,Vector2)<<std::endl;
 
+    Normalize(Vector2);
 
     return 0;
 }
