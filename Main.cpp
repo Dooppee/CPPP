@@ -176,6 +176,14 @@ public:
     }
 };
 
+float GetCos(float*Vector1,float*Vector2)
+{
+    
+    float Resul = ((*Vector1)*(*Vector2)+(*(Vector1+1))*(*(Vector2+1)))/
+    ((std::sqrt(std::pow(*Vector1,2)+std::pow(*(Vector1+1),2)))*(std::sqrt(std::pow(*Vector2,2)+std::pow(*(Vector2+1),2))));
+
+    return Resul;
+}
 
 int main()
 {
@@ -323,7 +331,11 @@ int main()
     }
 
     //std::cout<<std::size(Ptr);   
-    
+    std::cout<<std::endl;
+    float Vector1[]{1.f,0.f};
+    float Vector2[]{3.f,4.f};
+    std::cout<< GetCos(Vector1,Vector2);
+
 
     return 0;
 }
