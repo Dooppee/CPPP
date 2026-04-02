@@ -195,6 +195,11 @@ void Normalize(float*Vector)
     std::cout<<NewVector[0]<<' '<<NewVector[1]<<std::endl;
 }
 
+
+
+
+
+
 int main()
 {
     // std::cout<<std::setfill('*');
@@ -347,6 +352,10 @@ int main()
     std::cout<< GetCos(Vector1,Vector2)<<std::endl;
 
     Normalize(Vector2);
+
+    //矩阵运算
+    
+
 
     return 0;
 }
