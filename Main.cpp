@@ -8,6 +8,7 @@
 #include <vector>
 #include <memory>
 #include <cstddef>
+#include <optional>
     constexpr unsigned short int Perm_Move {1<<0}; // 0x1
     constexpr unsigned short int Perm_Attact {1<<1};//0x2
     constexpr unsigned short int Perm_Use{1<<2}; // 0x4;
@@ -185,7 +186,7 @@ float GetCos(float*Vector1,float*Vector2)
     return Resul;
 }
 
-void Normalize(float*Vector)
+inline void Normalize(float*Vector)
 {
 
     //(*Vector)/((std::sqrt(std::pow(*(Vector),2))+(std::pow(*(Vector+1),2))));
@@ -197,10 +198,37 @@ void Normalize(float*Vector)
 
 
 
+std::optional<int> OptionFunc(std::optional<int>& InOption)
+{
+    if (InOption.has_value())
+    {
+        InOption.value() = 30;
+        std::cout<<"Value:"<<InOption.value()<<std::endl;
+        return InOption;
+    }else
+        std::cout<<"空"<<std::endl;
+    return std::nullopt;
 
+    
+} 
 
-
+int Funct(int& a ){std::cout<<"调用int"<<std::endl;return a;};
+int Funct(const int& a ){std::cout<<"调用int&--"<<std::endl;return a;};
+inline auto dAA = [](int a , int b ){return a+b;};
+int ReFunc(int inInt)
+{
+    if (inInt<=0)
+    {
+        std::cout<<"结束执行:"<<inInt<<std::endl;
+        return 0;
+    }
+    std::cout<<"继续执行:"<<inInt<<std::endl;
+    inInt--;
+    ReFunc(inInt);
+    return 0;
+}
 int main()
+{
 {
     // std::cout<<std::setfill('*');
     // int intget{1};
@@ -355,7 +383,20 @@ int main()
 
     //矩阵运算
     
+    std::optional<int> TestOptoion {10};
+    auto tt  = OptionFunc(TestOptoion);
+    
+    char TestChar[]{"abcedf"};
+    std::string_view CharView{TestChar};
+    std::cout<<(const void*)CharView.data()<<std::endl;
+}
 
+    
+    int a{10000},b{20};
+    auto d = [&](int a , int b ){return a+b;}(a,b) ;
+    std::cout<<dAA(2,30)<<std::endl;
 
+    ReFunc(a);
     return 0;
 }
+
