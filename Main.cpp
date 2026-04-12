@@ -9,11 +9,14 @@
 #include <memory>
 #include <cstddef>
 #include <optional>
-    constexpr unsigned short int Perm_Move {1<<0}; // 0x1
-    constexpr unsigned short int Perm_Attact {1<<1};//0x2
-    constexpr unsigned short int Perm_Use{1<<2}; // 0x4;
-    constexpr unsigned short int Perm_Chat{1<<3}; // 0x8
-    constexpr unsigned short int Perm_Admin{1<<4}; //0x10;
+#include <optional>
+#include <type_traits>
+
+constexpr unsigned short int Perm_Move {1<<0}; // 0x1
+constexpr unsigned short int Perm_Attact {1<<1};//0x2
+constexpr unsigned short int Perm_Use{1<<2}; // 0x4;
+constexpr unsigned short int Perm_Chat{1<<3}; // 0x8
+constexpr unsigned short int Perm_Admin{1<<4}; //0x10;
     
     struct PermissionInfo 
     {
@@ -76,7 +79,6 @@
     {
         return Array[((InRow-1)*Incol)+(Incol-1)];
     }
-
 class Canvas
 
 {
@@ -141,7 +143,6 @@ public:
         
     }
 };
-
 class Canvas3D
 
 {
@@ -176,7 +177,6 @@ public:
         
     }
 };
-
 float GetCos(float*Vector1,float*Vector2)
 {
     
@@ -185,7 +185,6 @@ float GetCos(float*Vector1,float*Vector2)
 
     return Resul;
 }
-
 inline void Normalize(float*Vector)
 {
 
@@ -195,9 +194,6 @@ inline void Normalize(float*Vector)
     *(Vector+1)/((std::sqrt((*Vector)*(*Vector)+(*(Vector+1))*(*(Vector+1)))))};
     std::cout<<NewVector[0]<<' '<<NewVector[1]<<std::endl;
 }
-
-
-
 std::optional<int> OptionFunc(std::optional<int>& InOption)
 {
     if (InOption.has_value())
@@ -215,7 +211,9 @@ std::optional<int> OptionFunc(std::optional<int>& InOption)
 int Funct(int& a ){std::cout<<"调用int"<<std::endl;return a;};
 int Funct(const int& a ){std::cout<<"调用int&--"<<std::endl;return a;};
 inline auto dAA = [](int a , int b ){return a+b;};
+
 int ReFunc(int inInt)
+
 {
     if (inInt<=0)
     {
@@ -227,6 +225,59 @@ int ReFunc(int inInt)
     ReFunc(inInt);
     return 0;
 }
+
+
+template < typename T>
+const T& GetMax(const T& a, const T& b)
+  {                                                                                                                     
+      std::cout<<"调用函数模板"<<std::endl;                                                                             
+      return (a>b) ? a : b;  // 安全，因为返回的是参数本身的引用                                                        
+  } 
+template <typename T,typename U>
+auto GetMax01(const T& a, const U& b)-> decltype ((a>b) ? a :
+ b)
+{
+    std::cout<<"调用函数模板重载"<<std::endl;                                                                             
+    return (a>b) ? a : b;  // 安全，因为返回的是参数本身的引用
+}
+
+template <typename T, typename U>
+decltype(auto) Getter(const T & a,const U & b)
+{
+    std::cout<<"decltype auto 执行了"<<std::endl;
+    return (a>b)?a:b;
+}
+//模版约束
+template <typename T>
+requires std::is_integral<T>::value //bool值为true时才会实例化这个函数模板
+void RequiresInt(T a)
+{
+    std::cout<<"调用了RequiresInt"<<std::endl;
+    std::cout<<a<<std::endl;
+}
+
+template <std::floating_point T > //使用概念约束模板参数必须是浮点数类型
+void Requiresfloat(T a)
+{
+    std::cout<<"调用了RequiresFloat"<<std::endl;
+    std::cout<<a<<std::endl;
+}
+template <typename T>
+void RequiresIntCon(T a) requires std::integral<T>
+{
+    std::cout<<"调用了RequiresIntCon"<<std::endl;
+    std::cout<<a<<std::endl;
+}
+template<typename T>
+concept MyIntegral = std::is_integral<T>::value;
+
+template <typename T>
+void RequiresIntConConcept(T a) requires MyIntegral<T>
+{
+    std::cout<<"调用了RequiresIntConConcept"<<std::endl;
+    std::cout<<a<<std::endl;
+}
+
 int main()
 {
 {
@@ -391,12 +442,18 @@ int main()
     std::cout<<(const void*)CharView.data()<<std::endl;
 }
 
-    
-    int a{10000},b{20};
+    int a{10},b{20};
     auto d = [&](int a , int b ){return a+b;}(a,b) ;
     std::cout<<dAA(2,30)<<std::endl;
 
     ReFunc(a);
+    char CharA{'a'},CharB{'b'};
+    std::cout<<Getter(a,b)<<std::endl;
+    std::cout<<GetMax01(a,CharA)<<std::endl;
+    std::is_integral<float>::value?std::cout<<"是整数类型"<<std::endl:std::cout<<"不是整数类型"<<std::endl;
+    std::is_class<std::string>::value?std::cout<<"是类类型"<<std::endl:std::cout<<"不是类类型"<<std::endl;
+    RequiresIntCon(1);
+    RequiresIntConConcept(1);
     return 0;
 }
 
