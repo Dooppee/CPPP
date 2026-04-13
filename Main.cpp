@@ -1,4 +1,4 @@
-#include <iostream> 
+#include <iostream>
 #include <string>
 #include <ios>
 #include <cmath>
@@ -11,6 +11,11 @@
 #include <optional>
 #include <optional>
 #include <type_traits>
+
+// Windows下解决中文乱码
+#ifdef _WIN32
+#include <windows.h>
+#endif
 
 constexpr unsigned short int Perm_Move {1<<0}; // 0x1
 constexpr unsigned short int Perm_Attact {1<<1};//0x2
@@ -280,6 +285,12 @@ void RequiresIntConConcept(T a) requires MyIntegral<T>
 
 int main()
 {
+    // Windows下设置控制台为UTF-8，解决中文乱码
+    #ifdef _WIN32
+        SetConsoleOutputCP(65001);
+        SetConsoleCP(65001);
+    #endif
+
 {
     // std::cout<<std::setfill('*');
     // int intget{1};
