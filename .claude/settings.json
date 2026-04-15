@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git restore:*)",
+      "Bash(git add:*)",
+      "Bash(git commit -m '添加跨平台配置说明文档:*)"
+    ]
+  }
+}
