@@ -282,15 +282,33 @@ void RequiresIntConConcept(T a) requires MyIntegral<T>
     std::cout<<"调用了RequiresIntConConcept"<<std::endl;
     std::cout<<a<<std::endl;
 }
-
+//函数类
+class Animal
+{
+private:
+    std::string Names{"Null"};
+    int age{0};
+    std::optional<int*> NumberOpt{std::nullopt};
+public:
+    Animal()=default;
+    Animal(const std::string& InName,const int& Inage,const std::optional<int*> InOptional):Names(InName),age(Inage),NumberOpt(InOptional)
+    {
+    };
+    ~Animal()
+    {
+        std::cout<<"执行了析构函数"<<std::endl;
+    }
+    
+    std::string GetName(){return Names;};
+    std::optional<int*> OptGetter(){return NumberOpt;};
+};
 int main()
 {
-    // Windows下设置控制台为UTF-8，解决中文乱码
+// Windows下设置控制台为UTF-8，解决中文乱码
     #ifdef _WIN32
         SetConsoleOutputCP(65001);
         SetConsoleCP(65001);
     #endif
-
 {
     // std::cout<<std::setfill('*');
     // int intget{1};
@@ -465,6 +483,27 @@ int main()
     std::is_class<std::string>::value?std::cout<<"是类类型"<<std::endl:std::cout<<"不是类类型"<<std::endl;
     RequiresIntCon(1);
     RequiresIntConConcept(1);
+
+    {
+        int Numbers{1124};
+        std::optional<int*> NumberOpt{&Numbers};
+        Animal Dogs("Pop",10,NumberOpt);
+        std::boolalpha;
+        std::cout<<Dogs.OptGetter().has_value()<<std::endl;
+        std::cout<<*(Dogs.OptGetter().value())<<std::endl;
+        
+        Animal* DogsPtr = new Animal("Pop",10,NumberOpt);
+        std::cout<<DogsPtr->OptGetter().has_value()<<std::endl;
+        delete DogsPtr;
+        DogsPtr = nullptr;
+        std::shared_ptr<Animal>ShearAnimal = std::make_shared<Animal>("Pop",10,NumberOpt);
+        std::cout<<ShearAnimal->GetName()<<std::endl;
+
+        std::cout<<(sizeof(std::string))<<std::endl;
+        
+    };
+
+    
     return 0;
 }
 
