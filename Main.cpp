@@ -11,6 +11,11 @@
 #include <optional>
 #include <optional>
 #include <type_traits>
+#include <thread>
+#include <future>
+#include <chrono>
+#include <vector>
+#include <mutex>
 
 // Windows下解决中文乱码
 #ifdef _WIN32
@@ -502,8 +507,82 @@ int main()
         std::cout<<(sizeof(std::string))<<std::endl;
         
     };
+    {
+         std::mutex print_mtx;  // 防止打印乱掉
 
-    
+        std::cout << "【蜂后】启动，派发3只蜜蜂采蜜\n\n";
+
+    // ==============================
+    // 派发蜜蜂（全部用 lambda）
+    // ==============================
+    std::vector<std::future<int>> bees;
+
+    // 蜜蜂 1
+    bees.emplace_back(std::async(std::launch::async, [&](int id) {
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+        std::lock_guard lg(print_mtx);
+        std::cout << "蜜蜂" << id << " 采蜜完成\n";
+        return 10 + id;
+    }, 1));
+    // 蜜蜂 2
+    bees.emplace_back(async(std::launch::async, [&](int id) {
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+        std::lock_guard lg(print_mtx);
+        std::cout << "蜜蜂" << id << " 采蜜完成\n";
+        return 10 + id;
+    }, 2));
+
+    // 蜜蜂 3
+    bees.emplace_back(async(std::launch::async, [&](int id) {
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+        std::lock_guard lg(print_mtx);
+        std::cout << "蜜蜂" << id << " 采蜜完成\n";
+        return 10 + id;
+    }, 3));
+
+    // ==============================
+    // 蜂后主线程循环（永不阻塞）
+    // ==============================
+    int frame = 0;
+    bool all_done = false;
+
+    while (!all_done)
+    {
+         std::this_thread::sleep_for( std::chrono::milliseconds(300));
+        {
+             std::lock_guard lg(print_mtx);
+             std::cout << "【蜂后】忙碌中... 第" << frame++ << "帧\n";
+        }
+
+        // 检查是否完成
+        bool done = true;
+        for (auto& f : bees) {
+            if (f.wait_for(std::chrono::seconds(0))!= std::future_status::ready) 
+            {
+                done = false;
+                break;
+            }
+        }
+
+        // 全部完成 → 主线程处理（lambda 直接写结果逻辑）
+        if (done)
+        {
+            int total = 0;
+            for (auto& f : bees) total += f.get();
+
+            // 这里也是 lambda 风格的逻辑
+            [=]() {
+                 std::cout << "\n【蜂后】收到所有蜂蜜，总量 = " << total << "\n";
+                 std::cout << "【蜂后】开始分配巢穴资源\n";
+            }();
+
+            all_done = true;
+        }
+    }
+
+     std::cout << "\n【蜂后】工作结束\n";
+    }
+
     return 0;
 }
 
